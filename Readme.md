@@ -1,0 +1,1 @@
+Exploring JSON payload validation Spring Boot.
