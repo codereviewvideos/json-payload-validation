@@ -15,12 +15,12 @@ import uk.co.a6software.json_payload_validation.dto.SimplePayloadDto;
 public class SimpleJsonPayloadControllerTest {
 
     private final MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public SimpleJsonPayloadControllerTest(MockMvc mockMvc) {
+    public SimpleJsonPayloadControllerTest(MockMvc mockMvc, ObjectMapper objectMapper) {
         this.mockMvc = mockMvc;
+        this.objectMapper = objectMapper;
     }
 
     @Test
@@ -32,7 +32,7 @@ public class SimpleJsonPayloadControllerTest {
 
     @Test
     public void testHandleSimpleJsonPayload_withInvalidPayload() throws Exception {
-        SimplePayloadDto invalidDto = new SimplePayloadDto();
+        SimplePayloadDto invalidDto = new SimplePayloadDto(null);
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/simple-payload")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -45,11 +45,11 @@ public class SimpleJsonPayloadControllerTest {
 
     @Test
     public void testHandleSimpleJsonPayload_withValidPayload() throws Exception {
-        SimplePayloadDto invalidDto = new SimplePayloadDto("Some text");
+        SimplePayloadDto validDto = new SimplePayloadDto("Some text");
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/simple-payload")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalidDto));
+                .content(objectMapper.writeValueAsString(validDto));
 
         mockMvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk())
